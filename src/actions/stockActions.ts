@@ -8,7 +8,7 @@ export interface StockState {
 }
 
 export async function updateStockAction(
-  prevState: StockState | null,
+  _prevState: StockState | null,
   formData: FormData
 ): Promise<StockState> {
   const productId = formData.get('productId') as string;
