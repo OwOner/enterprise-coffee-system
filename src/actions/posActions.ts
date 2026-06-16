@@ -9,7 +9,7 @@ export interface PosState {
 }
 
 export async function processSaleAction(
-  prevState: PosState | null,
+  _prevState: PosState | null,
   formData: FormData
 ): Promise<PosState> {
   const productName = formData.get('productName') as string;

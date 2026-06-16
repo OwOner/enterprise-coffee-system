@@ -9,7 +9,7 @@ export interface InventoryState {
 }
 
 export async function saveProductAction(
-  prevState: InventoryState | null,
+  _prevState: InventoryState | null,
   formData: FormData
 ): Promise<InventoryState> {
   const productId = formData.get('productId') as string | null; 
@@ -77,7 +77,7 @@ export async function saveProductAction(
 }
 
 export async function deleteProductAction(
-  prevState: InventoryState | null,
+  _prevState: InventoryState | null,
   formData: FormData
 ): Promise<InventoryState> {
   const productId = formData.get('productId') as string;

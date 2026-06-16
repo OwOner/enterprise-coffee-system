@@ -8,7 +8,7 @@ export interface AuthState {
 }
 
 export async function loginAction(
-  prevState: AuthState | null,
+  _prevState: AuthState | null,
   formData: FormData
 ): Promise<AuthState> {
   const email = formData.get('email') as string;
