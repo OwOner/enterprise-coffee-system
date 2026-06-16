@@ -66,34 +66,55 @@ export default function AdminLayout() {
                     min-h-[44px] flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
                     ${isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}
                   `}
-                >
-                  Inventory
-                </NavLink>
+                >Catalog Builder {/* Renamed for clarity */}
+  </NavLink>
+  
+  <NavLink 
+    to="/admin/stock"
+    className={({ isActive }) => `
+      min-h-[44px] flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
+      ${isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}
+    `}
+  >
+    BOH Stockroom {/* NEW WORKER LINK */}
+  </NavLink>
                 <NavLink 
                   to="/admin/ledger"
                   className={({ isActive }) => `
                     min-h-[44px] flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors
                     ${isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}
                   `}
+                  
                 >
                   General Ledger
                 </NavLink>
               </nav>
             </div>
 
-            <div className="flex items-center gap-4">
-              {/* Display the active user's email for context */}
-              <span className="text-xs text-gray-400 font-mono hidden sm:block">
-                {session.user.email}
-              </span>
-              <button
-                onClick={handleLogout}
-                type="button"
-                className="min-h-[44px] min-w-[44px] px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-              >
-                Sign Out
-              </button>
-            </div>
+          <div className="flex items-center gap-4">
+  {/* The Escape Hatch: View the public storefront */}
+  <a 
+    href="/" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="hidden sm:flex items-center gap-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+  >
+    View Storefront ↗
+  </a>
+
+  {/* Display the active user's email */}
+  <span className="text-xs text-gray-400 font-mono hidden md:block border-l border-gray-700 pl-4">
+    {session.user.email}
+  </span>
+
+  <button
+    onClick={handleLogout}
+    type="button"
+    className="min-h-[44px] min-w-[44px] px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 ml-2"
+  >
+    Sign Out
+  </button>
+</div>
 
           </div>
         </div>

@@ -1,33 +1,37 @@
 // src/actions/authActions.ts
 import { supabase } from '../lib/supabase';
 
-// Define the state interface for strict TypeScript adherence
 export interface AuthState {
   error?: string;
   success?: boolean;
+  timestamp?: number;
 }
 
 export async function loginAction(
-  prevState: AuthState | null, 
+  prevState: AuthState | null,
   formData: FormData
 ): Promise<AuthState> {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
   if (!email || !password) {
-    return { error: 'Both email and password are required for authorization.' };
+    return { error: 'Email and password are required.' };
   }
 
+  // Attempt to authenticate with Supabase
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
-    // Transactional Error Mapping: Sanitize database/auth errors for the UI
-    return { error: 'Invalid credentials. The vault remains locked.' };
+    console.error("AUTH ERROR:", error.message);
+    return { error: 'Invalid login credentials. Please try again.' };
   }
 
-  // On success, the session is securely stored by the Supabase client.
-  return { success: true };
+  // Supabase automatically sets the session cookie/local storage on success
+  return { 
+    success: true, 
+    timestamp: Date.now() 
+  };
 }

@@ -1,9 +1,12 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
 import LandingPage from './pages/public/LandingPage'; 
 import LoginForm from './pages/admin/LoginForm';
 import AdminLayout from './pages/admin/AdminLayout';
 import InventoryDashboard from './pages/admin/InventoryDashboard';
+import LedgerDashboard from './pages/admin/LedgerDashboard';
+import WorkerDashboard from './pages/admin/WorkerDashboard';
 
 export default function App() {
   return (
@@ -19,7 +22,9 @@ export default function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/inventory" replace />} />
           <Route path="inventory" element={<InventoryDashboard />} />
-          <Route path="ledger" element={<div>Ledger Module (Pending)</div>} />
+          <Route path="inventory" element={<InventoryDashboard />} />
+<Route path="stock" element={<WorkerDashboard />} /> {/* NEW ROUTE */}
+         <Route path="ledger" element={<LedgerDashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>

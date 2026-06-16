@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Link } from 'react-router-dom';
 
+// 1. Updated Interface: Added image_url
 interface Product {
   id: string;
   name: string;
   price_cents: number;
+  image_url: string | null; 
 }
 
 export default function LandingPage() {
@@ -16,9 +18,10 @@ export default function LandingPage() {
   useEffect(() => {
     async function fetchMenu() {
       setLoading(true);
+      // 2. Updated Query: Now asking Postgres for the image_url column
       const { data, error } = await supabase
         .from('products')
-        .select('id, name, price_cents')
+        .select('id, name, price_cents, image_url')
         .order('name', { ascending: true });
 
       if (!error && data) {
@@ -39,7 +42,6 @@ export default function LandingPage() {
           <span className="font-serif text-xl font-bold tracking-tight text-stone-900">
             CRAFT<span className="text-amber-700">&</span>BREAD
           </span>
-          {/* Subtle utility navigation pointing back to staff login if needed */}
           <Link 
             to="/admin/login"
             className="min-h-[44px] min-w-[44px] px-4 py-2 flex items-center text-sm font-medium text-stone-600 hover:text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-700 rounded-md transition-colors"
@@ -80,37 +82,56 @@ export default function LandingPage() {
               Our menu is currently resting. Check back during business hours.
             </div>
           ) : (
-            /* Responsive Grid System: Fluid columns with zero horizontal scroll */
+            /* Responsive Grid System */
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product) => (
                 <div 
                   key={product.id}
-                  className="group border border-stone-100 rounded-xl p-5 hover:border-amber-200 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col justify-between gap-4 bg-stone-50/50"
+                  className="group border border-stone-100 rounded-xl overflow-hidden hover:border-amber-200 hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col bg-white"
                 >
-                  <div className="flex flex-col gap-1">
-                    <h3 className="font-serif font-bold text-lg text-stone-900 group-hover:text-amber-800 transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-xs text-stone-400 font-mono tracking-wider uppercase">
-                      ID: {product.id.split('-')[0]}
-                    </p>
+                  
+                  {/* 3. NEW CODE: The Image Container */}
+                  <div className="w-full aspect-[16/9] bg-stone-100 relative overflow-hidden">
+                    {product.image_url ? (
+                      <img 
+                        src={product.image_url} 
+                        alt={`Photograph of ${product.name}`}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      // Fallback for products without images
+                      <div className="w-full h-full flex items-center justify-center text-stone-400 font-serif text-sm">
+                        No Image
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-stone-100/80">
-                    {/* Financial Integrity: Deserializing cents back to display currency */}
-                    <span className="text-xl font-bold text-stone-900">
-                      ${(product.price_cents / 100).toFixed(2)}
-                    </span>
+                  {/* Text & Interaction Container */}
+                  <div className="p-5 flex flex-col justify-between gap-4 flex-1">
+                    <div className="flex flex-col gap-1">
+                      <h3 className="font-serif font-bold text-lg text-stone-900 group-hover:text-amber-800 transition-colors">
+                        {product.name}
+                      </h3>
+                      <p className="text-xs text-stone-400 font-mono tracking-wider uppercase">
+                        ID: {product.id.split('-')[0]}
+                      </p>
+                    </div>
 
-                    {/* 10% Accent Call-to-Action: Interactive micro-target */}
-                    <button
-                      type="button"
-                      onClick={() => alert(`Enjoy your ${product.name}!`)}
-                      className="min-h-[44px] min-w-[44px] px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-                    >
-                      Order
-                    </button>
+                    <div className="flex items-center justify-between pt-4 border-t border-stone-100/80 mt-auto">
+                      <span className="text-xl font-bold text-stone-900">
+                        ${(product.price_cents / 100).toFixed(2)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => alert(`Enjoy your ${product.name}!`)}
+                        className="min-h-[44px] min-w-[44px] px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                      >
+                        Order
+                      </button>
+                    </div>
                   </div>
+
                 </div>
               ))}
             </div>
